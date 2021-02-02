@@ -12,7 +12,7 @@ This script downloads / records live stream from BBC2 radio station. There is po
 2. Open *auto.bat* in a text editor and paste required parameters instead of existing samples
 3. Save *auto.bat* and run it
 
-OR
+**OR**
 
 1. Just run *manual.bat*
 
