@@ -1,4 +1,4 @@
-# ee.record_bbc2
+# ee.Record_bbc2
 
 This script downloads / records live stream from BBC2 radio station. There is possibility of rewinding up to 24 hours.
 
@@ -35,4 +35,4 @@ This script downloads / records live stream from BBC2 radio station. There is po
 bbc2 dash download live livestream radio record rewind save stream
 
 ---
-[[program page]](https://rytsikau.github.io/ee.record_bbc2) [[start page]](https://rytsikau.github.io) [[author e-mail]](mailto:y.rytsikau@gmail.com)
+[[program page]](https://rytsikau.github.io/ee.Record_bbc2) [[start page]](https://rytsikau.github.io) [[author e-mail]](mailto:y.rytsikau@gmail.com)
