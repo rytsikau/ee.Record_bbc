@@ -2,7 +2,7 @@
 
 This script downloads / records live stream from BBC2 radio station. There is possibility of rewinding up to 24 hours.
 
-### [>> download version 20210203](https://github.com/rytsikau/ee.record_bbc2/releases/download/20210203/ee.record_bbc2_20210203.zip)
+### [>> download version 20210204](https://github.com/rytsikau/ee.record_bbc2/releases/download/20210204/ee.record_bbc2_20210204.zip)
 
 
 
