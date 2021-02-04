@@ -1,14 +1,16 @@
 '--------------------------------------------------------------------------------------------------'
-' ee.Record_bbc2 (v.20210203)                                                                      '
+' ee.Record_bbc2 (v.20210204)                                                                      '
 '--------------------------------------------------------------------------------------------------'
 set-executionpolicy unrestricted -scope currentuser
 $erroractionpreference = "silentlycontinue"; remove-variable *; $erroractionpreference = "continue"
 $dtScript = get-date
 
 # Stream parameters
-$dtRefer = [datetime]::ParseExact('20210101-000000','yyyyMMdd-HHmmss', $null)
-$seqRefer = 251476315
 $seqDuration = 6400
+$dtRefer = [datetime]::ParseExact('20210101-000000','yyyyMMdd-HHmmss', $null)
+$seqReferUTC = 251478003
+$timeZoneOffset = [int]($(Get-TimeZone).BaseUtcOffset.TotalMilliseconds / $seqDuration)
+$seqRefer = $seqReferUTC - $timeZoneOffset
 $urlInit = "https://as-dash-ww-live.akamaized.net/pool_904/live/ww/" `
     + "bbc_radio_two/bbc_radio_two.isml/dash/bbc_radio_two-audio=96000.dash"
 $urlSeq = "https://as-dash-ww-live.bbcfmt.s.llnwi.net/pool_904/live/ww/" `
