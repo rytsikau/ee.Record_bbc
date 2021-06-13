@@ -1,24 +1,22 @@
-# ee.Record_bbc2
+# ee.record_bbc
 
-This script downloads / records live stream from BBC2 radio station. There is possibility of rewinding up to 24 hours.
+This script can save several live streams from BBC: Radio One, Radio Two and Radio Three. There is a possibility of rewinding up to 24 hours.
 
-### [>> download version 20210325](https://github.com/rytsikau/ee.record_bbc2/releases/download/20210325/ee.record_bbc2_20210325.zip)
+### [>> download version 20210613](https://github.com/rytsikau/ee.record_bbc/releases/download/20210613/ee.record_bbc_20210613.zip)
 
 
 
 ## Quick Start
 
 1. Unpack the downloaded archive
-2. Open *auto.bat* in a text editor and paste required parameters instead of existing samples
-3. Save *auto.bat* and run it
-
-**OR** just run *manual.bat*
+2. Run *run.bat*
+3. See result in *\recordings* directory
 
 
 
-## Tested Configuration
+## Usage info
 
-* Windows 10 Pro x64 version 1909
+* File *oneclick_examples.bat* contains examples to save a stream in one click
 
 
 
@@ -28,9 +26,21 @@ This script downloads / records live stream from BBC2 radio station. There is po
 
 
 
+## Tested Configuration
+
+* Windows 10 Pro x64 version 1909
+
+
+
 ## Tags
 
-bbc2 dash download live livestream radio record rewind save stream
+akamai bbc dash download live livestream radio record rewind save stream
+
+
+
+## About
+
+Saves live streams from BBC
 
 ---
-[author e-mail](mailto:y.rytsikau@gmail.com)
+[[program page]](https://rytsikau.github.io/ee.record_bbc) [[start page]](https://rytsikau.github.io) [[author e-mail]](mailto:y.rytsikau@gmail.com)
