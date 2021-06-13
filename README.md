@@ -43,4 +43,4 @@ akamai bbc dash download live livestream radio record rewind save stream
 Saves live streams from BBC
 
 ---
-[[program page]](https://rytsikau.github.io/ee.record_bbc) [[start page]](https://rytsikau.github.io) [[author e-mail]](mailto:y.rytsikau@gmail.com)
+[[program page]](https://rytsikau.github.io/ee.Record_bbc) [[start page]](https://rytsikau.github.io) [[author e-mail]](mailto:y.rytsikau@gmail.com)
