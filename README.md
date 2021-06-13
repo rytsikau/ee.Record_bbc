@@ -1,4 +1,4 @@
-# ee.record_bbc
+# ee.Record_bbc
 
 This script can save several live streams from BBC: Radio One, Radio Two and Radio Three. There is a possibility of rewinding up to 24 hours.
 
