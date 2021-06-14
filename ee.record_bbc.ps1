@@ -1,5 +1,5 @@
 <#-------------------------------------------------------------------------------------------------
-ee.Record_bbc (v.20210614)
+ee.Record_bbc (v.20210614b)
 -------------------------------------------------------------------------------------------------#>
 Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 $ErrorActionPreference = "SilentlyContinue"; Remove-Variable *; $ErrorActionPreference = "Continue"
@@ -105,9 +105,7 @@ Function Create-Menu ($menuTitle, $menuOptions)
 If ($Args[0] -like "")
 {
     $menuTitle = "Select STREAM"
-    $menuOptions = "BBC Radio One",
-                   "BBC Radio Two",
-                   "BBC Radio Three"
+    $menuOptions = "BBC Radio One", "BBC Radio Two", "BBC Radio Three"
     $streamStr = Create-Menu $menuTitle $menuOptions
 
     Write-Host "Select START"
@@ -133,7 +131,7 @@ Else
 
 # 2. Parse STREAM (1st argument) and assign its variable(s)
 #<#-------------------------------------------------------------------------------------------------
-If ($streamStr -eq "bbc_radio_one")
+If ($streamStr -eq $menuOptions[0].Replace(" ", "_").ToLower())
 {
     $dtReferUtcStr = "20210101-000000"
     $seqReferUtc = 251478007
@@ -143,7 +141,7 @@ If ($streamStr -eq "bbc_radio_one")
     $urlSeq = "https://as-dash-ww.live.cf.md.bbci.co.uk/pool_904/live/ww/bbc_radio_" `
         + "one/bbc_radio_one.isml/dash/bbc_radio_one-audio=96000-[seqNumber].m4s"
 }
-ElseIf ($streamStr -eq "bbc_radio_two")
+ElseIf ($streamStr -eq $menuOptions[1].Replace(" ", "_").ToLower())
 {
     $dtReferUtcStr = "20210101-000000"
     $seqReferUtc = 251478007
@@ -153,7 +151,7 @@ ElseIf ($streamStr -eq "bbc_radio_two")
     $urlSeq = "https://as-dash-ww.live.cf.md.bbci.co.uk/pool_904/live/ww/bbc_radio_" `
         + "two/bbc_radio_two.isml/dash/bbc_radio_two-audio=96000-[seqNumber].m4s"
 }
-ElseIf ($streamStr -eq "bbc_radio_three")
+ElseIf ($streamStr -eq $menuOptions[2].Replace(" ", "_").ToLower())
 {
     $dtReferUtcStr = "20210101-000000"
     $seqReferUtc = 251478007
