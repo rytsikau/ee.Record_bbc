@@ -1,98 +1,98 @@
 <#-------------------------------------------------------------------------------------------------
-ee.record_bbc (v.20210613)
+ee.Record_bbc (v.20210614)
 -------------------------------------------------------------------------------------------------#>
-set-executionpolicy unrestricted -scope currentuser
-$erroractionpreference = "silentlycontinue"; remove-variable *; $erroractionpreference = "continue"
-$folder = (get-item $psscriptroot).fullname + "\recordings"
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser
+$ErrorActionPreference = "SilentlyContinue"; Remove-Variable *; $ErrorActionPreference = "Continue"
+$folder = (Get-Item $PSScriptRoot).FullName + "\recordings"
 $filename = "[stream]_[start]_[duration]m"
-$format = "mp4"
+$format = "m4a"
 $durationDefault = 60
 
 
-# FUNCTION TO DOWNLOAD
+# Function to download
 #<#-------------------------------------------------------------------------------------------------
-function Downloader($seqBegin, $seqEnd, $seqCurrent, $filename)
+Function Downloader($seqBegin, $seqEnd, $seqCurrent, $filename)
 {
-    write-host "Saving `"$filename.$format`" 00%" -nonewline
-    $filenameTmp = $filename + "_TMP$(get-random)"
+    Write-Host "Saving `'$filename.$format`'...   0%" -NoNewline
+    $filenameTmp = $filename + "_TMP$(Get-Random)"
     $fs = [System.IO.File]::OpenWrite("$folder\$filenameTmp.$format")
-    $fs.position = $fs.length
-    $content = (New-Object System.Net.WebClient).downloaddata($urlInit)
-    $fs.write($content, 0, $content.length)
+    $fs.Position = $fs.Length
+    $content = (New-Object System.Net.WebClient).DownloadData($urlInit)
+    $fs.Write($content, 0, $content.Length)
 
     $seqBuffered = $seqCurrent - 5
-    if ($seqBegin -gt $seqBuffered)
+    If ($seqBegin -gt $seqBuffered)
     {
         $waitBuffering = ($seqBegin - $seqBuffered) * $seqDuration
-        start-sleep -milliseconds $waitBuffering
+        Start-Sleep -Milliseconds $waitBuffering
     }
 
     $percStep = ($seqEnd - $seqBegin) / 100
-    for ($i = $seqBegin; $i -lt $seqEnd; $i++)
+    For ($i = $seqBegin; $i -lt $seqEnd; $i++)
     {
-        if ($i -gt $seqBuffered++) { start-sleep -milliseconds $seqDuration }
-        $fs.position = $fs.length
-        $content = (New-Object System.Net.WebClient).downloaddata($urlSeq.replace("[seqNumber]", $i))
-        $fs.write($content, 0, $content.length)
+        If ($i -gt $seqBuffered++) { Start-Sleep -Milliseconds $seqDuration }
+        $fs.Position = $fs.Length
+        $content = (New-Object System.Net.WebClient).DownloadData($urlSeq.Replace("[seqNumber]", $i))
+        $fs.Write($content, 0, $content.Length)
 
         $percProgress = [int](($i - $seqBegin) / $percStep)
-        $percProgressStr = $percProgress.tostring('00') + "%"
-        write-host -nonewline "`b`b`b$percProgressStr";
+        $percProgressStr = $percProgress.ToString().PadLeft(3,' ') + "%"
+        Write-Host -NoNewline "`b`b`b`b$percProgressStr";
     }
-    write-host "`b`b`bREADY"
+    Write-Host "`b`b`b`bREADY"
 
-    $fs.close()
-    rename-item "$folder\$filenameTmp.$format" -newname "$folder\$filename.$format"
+    $fs.Close()
+    Rename-Item "$folder\$filenameTmp.$format" -NewName "$folder\$filename.$format"
 }
 #-------------------------------------------------------------------------------------------------#>
 
 
-# FUNCTION TO CREATE MENU
+# Function to create menu
 #<#-------------------------------------------------------------------------------------------------
-function Create-Menu ($menuTitle, $menuOptions)
+Function Create-Menu ($menuTitle, $menuOptions)
 {
     # Original function by <josiahdeal3479> is here:
     # https://community.spiceworks.com/scripts/show/4656
 
-    [console]::cursorvisible = $false
-    $maxValue = $menuOptions.count - 1
+    [Console]::CursorVisible = $False
+    $maxValue = $menuOptions.Count - 1
     $selection = 0
 
-    while ($true)
+    While ($True)
     {
-        clear-host
-        write-host "$menuTitle"
+        Clear-Host
+        Write-Host $menuTitle
 
-        for ($i = 0; $i -le $maxValue; $i++)
+        For ($i = 0; $i -le $maxValue; $i++)
         {
-            if ($i -eq $selection)
+            If ($i -eq $selection)
             {
-                write-host "  $($menuOptions[$i].padright(25," "))" -backgroundcolor darkblue
+                Write-Host "  $($menuOptions[$i].PadRight(25," "))" -BackgroundColor DarkBlue
             }
-            else
+            Else
             {
-                write-host "  $($menuOptions[$i])"
+                Write-Host "  $($menuOptions[$i])"
             }
         }
 
-        switch ($host.ui.rawui.readkey("NoEcho,IncludeKeyDown").virtualkeycode)
+        Switch ($Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown").VirtualKeyCode)
         {
             40 {
-                    if ($selection -eq $maxValue) { $selection = 0 }
-                    else { $selection += 1 }
-                    break
+                    If ($selection -eq $maxValue) { $selection = 0 }
+                    Else { $selection += 1 }
+                    Break
                }
 
             38 {
-                    if ($selection -eq 0) { $selection = $maxValue }
-                    else { $selection -= 1 }
-                    break
+                    If ($selection -eq 0) { $selection = $maxValue }
+                    Else { $selection -= 1 }
+                    Break
                }
 
             13 {
-                    [Console]::CursorVisible = $true
-                    $stream = $menuOptions[$selection].replace(" ", "_").tolower()
-                    return $stream
+                    [Console]::CursorVisible = $True
+                    $stream = $menuOptions[$selection].Replace(" ", "_").ToLower()
+                    Return $stream
                }
         }
     }
@@ -102,7 +102,7 @@ function Create-Menu ($menuTitle, $menuOptions)
 
 # 1. Get arguments
 #<#-------------------------------------------------------------------------------------------------
-if ($args[0] -like "")
+If ($Args[0] -like "")
 {
     $menuTitle = "Select STREAM"
     $menuOptions = "BBC Radio One",
@@ -110,30 +110,30 @@ if ($args[0] -like "")
                    "BBC Radio Three"
     $streamStr = Create-Menu $menuTitle $menuOptions
 
-    write-host "Select START"
-    write-host "  To record from now, just press ENTER"
-    write-host "  Type the start time as [HHmm], in 24-hour format:"
-    write-host "  " -nonewline
-    $startStr = read-host
+    Write-Host "Select START"
+    Write-Host "  [to record from now, just press ENTER]"
+    Write-Host "  Type the start time as [HHmm], in 24-hour format:"
+    Write-Host "  " -NoNewline
+    $startStr = Read-Host
 
-    write-host "Select DURATION"
-    write-host "  To use default 60 minutes, just press ENTER"
-    write-host "  Type required duration in minutes:"
-    write-host "  " -nonewline
-    $durationStr = read-host
+    Write-Host "Select DURATION"
+    Write-Host "  [to use default 60 minutes, just press ENTER]"
+    Write-Host "  Type required duration in minutes:"
+    Write-Host "  " -NoNewline
+    $durationStr = Read-Host
 }
-else
+Else
 {
-    $streamStr = $args[0]
-    $startStr = $args[1]
-    $durationStr = $args[2]
+    $streamStr = $Args[0]
+    $startStr = $Args[1]
+    $durationStr = $Args[2]
 }
 #-------------------------------------------------------------------------------------------------#>
 
 
 # 2. Parse STREAM (1st argument) and assign its variable(s)
 #<#-------------------------------------------------------------------------------------------------
-if ($streamStr -eq "bbc_radio_one")
+If ($streamStr -eq "bbc_radio_one")
 {
     $dtReferUtcStr = "20210101-000000"
     $seqReferUtc = 251478007
@@ -143,7 +143,7 @@ if ($streamStr -eq "bbc_radio_one")
     $urlSeq = "https://as-dash-ww.live.cf.md.bbci.co.uk/pool_904/live/ww/bbc_radio_" `
         + "one/bbc_radio_one.isml/dash/bbc_radio_one-audio=96000-[seqNumber].m4s"
 }
-elseif ($streamStr -eq "bbc_radio_two")
+ElseIf ($streamStr -eq "bbc_radio_two")
 {
     $dtReferUtcStr = "20210101-000000"
     $seqReferUtc = 251478007
@@ -153,7 +153,7 @@ elseif ($streamStr -eq "bbc_radio_two")
     $urlSeq = "https://as-dash-ww.live.cf.md.bbci.co.uk/pool_904/live/ww/bbc_radio_" `
         + "two/bbc_radio_two.isml/dash/bbc_radio_two-audio=96000-[seqNumber].m4s"
 }
-elseif ($streamStr -eq "bbc_radio_three")
+ElseIf ($streamStr -eq "bbc_radio_three")
 {
     $dtReferUtcStr = "20210101-000000"
     $seqReferUtc = 251478007
@@ -163,31 +163,31 @@ elseif ($streamStr -eq "bbc_radio_three")
     $urlSeq = "https://as-dash-ww.live.cf.md.bbci.co.uk/pool_904/live/ww/bbc_radio_" `
         + "three/bbc_radio_three.isml/dash/bbc_radio_three-audio=96000-[seqNumber].m4s"
 }
-else
+Else
 {
-    write-host "Error! Check STREAM (1st argument)"
-    exit
+    Write-Host "Error! Check STREAM (1st argument)"
+    Exit
 }
 #-------------------------------------------------------------------------------------------------#>
 
 
 # 3. Parse START (2nd argument) and assign its variable(s)
 #<#-------------------------------------------------------------------------------------------------
-if ($startStr -like "")
+If ($startStr -like "")
 {
-    $start = get-date
+    $start = Get-Date
 }
-else
+Else
 {
-    try
+    Try
     {
-        $start = [datetime]::ParseExact($startStr,'HHmm', $null)
-        if ($(get-date) -lt $start) { $start = $start.adddays(-1) }
+        $start = [DateTime]::ParseExact($startStr,'HHmm', $Null)
+        If ($(Get-Date) -lt $start) { $start = $start.AddDays(-1) }
     }
-    catch
+    Catch
     {
-        write-host "Error! Check START (2nd argument)"
-        exit
+        Write-Host "Error! Check START (2nd argument)"
+        Exit
     }
 }
 #-------------------------------------------------------------------------------------------------#>
@@ -195,20 +195,20 @@ else
 
 # 4. Parse DURATION (3rd argument) and assign its variable(s)
 #<#-------------------------------------------------------------------------------------------------
-if ($durationStr -like "")
+If ($durationStr -like "")
 {
-    $duration = [timespan]::FromMinutes($durationDefault)
+    $duration = [TimeSpan]::FromMinutes($durationDefault)
 }
-else
+Else
 {
-    try
+    Try
     {
-        $duration = [timespan]::FromMinutes($durationStr)
+        $duration = [TimeSpan]::FromMinutes($durationStr)
     }
-    catch
+    Catch
     {
-        write-host "Error! Check DURATION (3rd argument)"
-        exit
+        Write-Host "Error! Check DURATION (3rd argument)"
+        Exit
     }
 }
 #-------------------------------------------------------------------------------------------------#>
@@ -219,27 +219,27 @@ else
 $filename = $filename.Replace("[stream]", $streamStr)
 $filename = $filename.Replace("[start]", $start.ToString("yyyyMMdd-HHmm"))
 $filename = $filename.Replace("[duration]", $duration.TotalMinutes.ToString('0000'))
-if (test-path "$folder\$filename.$format")
+If (Test-Path "$folder\$filename.$format")
 {
-    write-host "Error! File already exists"
-    exit
+    Write-Host "Error! File already exists"
+    Exit
 }
-elseif (!(test-path $folder))
+ElseIf (!(Test-Path $folder))
 {
-    new-item -itemtype directory $folder | out-null
+    New-Item -ItemType Directory $folder | Out-Null
 }
 #-------------------------------------------------------------------------------------------------#>
 
 
 # 6. Calculate sequences
 #<#-------------------------------------------------------------------------------------------------
-$dtReferUtc = [datetime]::ParseExact($dtReferUtcStr,"yyyyMMdd-HHmmss", $null)
+$dtReferUtc = [DateTime]::ParseExact($dtReferUtcStr,"yyyyMMdd-HHmmss", $Null)
 $dtStartUtc = $start.ToUniversalTime()
 $seqBegin = [int]($seqReferUtc +
-    (new-timespan $dtReferUtc $dtStartUtc).TotalMilliseconds / $seqDuration)
+    (New-TimeSpan $dtReferUtc $dtStartUtc).TotalMilliseconds / $seqDuration)
 $seqEnd = $seqBegin + [int]($duration.TotalMilliseconds / $seqDuration)
 $seqCurrent = [int]($seqReferUtc +
-    (new-timespan $dtReferUtc $(get-date).ToUniversalTime()).TotalMilliseconds / $seqDuration)
+    (New-TimeSpan $dtReferUtc $(Get-Date).ToUniversalTime()).TotalMilliseconds / $seqDuration)
 #-------------------------------------------------------------------------------------------------#>
 
 
@@ -251,5 +251,5 @@ Downloader $seqBegin $seqEnd $seqCurrent $filename
 
 # 8. Finish
 #<#-------------------------------------------------------------------------------------------------
-$erroractionpreference = "silentlycontinue"; remove-variable *; $erroractionpreference = "continue"
+$ErrorActionPreference = "SilentlyContinue"; Remove-Variable *; $ErrorActionPreference = "Continue"
 #-------------------------------------------------------------------------------------------------#>
