@@ -2,7 +2,7 @@
 
 This script can save several live streams from BBC: Radio One, Radio Two, Radio Three, Radio Four LW and Radio Five Live. There is a possibility of rewinding up to 24 hours.
 
-### [>> download version 20210614](https://github.com/rytsikau/ee.record_bbc/releases/download/20210614/ee.record_bbc.zip)
+### [>> download version 20211027](https://github.com/rytsikau/ee.record_bbc/releases/download/20211027/ee.record_bbc.zip)
 
 
 
